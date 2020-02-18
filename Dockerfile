@@ -2,7 +2,7 @@
 #   https://hub.docker.com/r/solarce/zoom-us
 #   https://github.com/sameersbn/docker-skype
 FROM debian:jessie
-MAINTAINER mdouchement
+MAINTAINER drrighteous
 
 
 ENV DEBIAN_FRONTEND noninteractive
@@ -21,18 +21,18 @@ RUN apt-get install -qy curl sudo desktop-file-utils lib32z1 \
   libxcb-keysyms1 libxcb-xtest0 ibus ibus-gtk libibus-qt1 ibus-qt4 \
   libnss3 libxss1
 
-ARG ZOOM_URL=https://zoom.us/client/latest/zoom_amd64.deb
+ARG RC_URL=http://dn.ringcentral.com/data/web/download/RCMeetings/1210/RCMeetingsClientSetup.deb
 
 # Grab the client .deb
 # Install the client .deb
 # Cleanup
-RUN curl -sSL $ZOOM_URL -o /tmp/zoom_setup.deb
-RUN dpkg -i /tmp/zoom_setup.deb
+RUN curl -sSL $RC_URL -o /tmp/rc_setup.deb
+RUN dpkg -i /tmp/rc_setup.deb
 RUN apt-get -f install
-RUN rm /tmp/zoom_setup.deb \
+RUN rm /tmp/rc_setup.deb \
   && rm -rf /var/lib/apt/lists/*
 
-COPY scripts/ /var/cache/zoom-us/
+COPY scripts/ /var/cache/ringcentral/
 COPY entrypoint.sh /sbin/entrypoint.sh
 RUN chmod 755 /sbin/entrypoint.sh
 
