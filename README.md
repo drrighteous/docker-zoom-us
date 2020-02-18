@@ -1,34 +1,25 @@
-This project is fully inspired of [sameersbn](https://github.com/sameersbn) [Skype](https://github.com/sameersbn/docker-skype)'s containerization.
-
-# mdouchement/zoom-us
+# drrighteous/zoom-us
 
 # Introduction
 
-`Dockerfile` to create a [Docker](https://www.docker.com/) container image with [Zoom](http://www.zoom.us) for Linux with support for audio/video calls.
+`Dockerfile` to create a [Docker](https://www.docker.com/) container image with RingCentral for Linux with support for audio/video calls.
 
-The image uses [X11](http://www.x.org) and [Pulseaudio](http://www.freedesktop.org/wiki/Software/PulseAudio/) unix domain sockets on the host to enable audio/video support in Zoom. These components are available out of the box on pretty much any modern linux distribution.
-
-## Contributing
-
-If you find this image useful here's how you can help:
-
-- Send a pull request with your awesome features and bug fixes
-- Help users resolve their [issues](../../issues?q=is%3Aopen+is%3Aissue).
+The image uses [X11](http://www.x.org) and [Pulseaudio](http://www.freedesktop.org/wiki/Software/PulseAudio/) unix domain sockets on the host to enable audio/video support in RC. These components are available out of the box on pretty much any modern linux distribution.
 
 # Getting started
 
 ## Installation
 
-Automated builds of the image are available on [Dockerhub](https://hub.docker.com/r/mdouchement/zoom-us) and is the recommended method of installation.
+Automated builds of the image are available on [Dockerhub](https://hub.docker.com/r/drrighteous/ringcentral-custom) and is the recommended method of installation.
 
 ```bash
-docker pull mdouchement/zoom-us:latest
+docker pull drrighteous/ringcentral-custom:latest
 ```
 
 Alternatively you can build the image yourself.
 
 ```bash
-docker build -t mdouchement/zoom-us github.com/mdouchement/docker-zoom-us
+docker build -t drrighteous/ringcentral-custom github.com/drrighteous/ringcentral-custom
 ```
 
 With the image locally available, install the wrapper scripts using:
@@ -36,10 +27,10 @@ With the image locally available, install the wrapper scripts using:
 ```bash
 docker run -it --rm \
   --volume /usr/local/bin:/target \
-  mdouchement/zoom-us:latest install
+  drrighteous/ringcentral-custom:latest install
 ```
 
-This will install a wrapper script to launch `zoom`.
+This will install a wrapper script to launch `ringcentral`.
 
 > **Note**
 >
