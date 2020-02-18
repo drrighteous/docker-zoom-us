@@ -1,7 +1,7 @@
 #!/bin/bash
 
 PATH=/usr/sbin:/usr/bin:/sbin:/bin
-ZOOM_US_USER=zoom
+RC_US_USER=ringcentral
 
 # do we need to use sudo to start docker containers?
 ( id -Gn | grep -q docker ) || SUDO=sudo
@@ -19,19 +19,18 @@ fi;
 
 list_commands() {
   echo ""
-  echo "Launch zoom-us using:"
-  echo "  zoom-us                     OR "
-  echo "  zoom-us-wrapper zoom-us"
+  echo "Launch ringcentral meetings using:"
+  echo "  ringcentral-wrapper ringcentral"
   echo ""
   exit 1
 }
 
-cleanup_stopped_zoom_us_instances(){
-  echo "Cleaning up stopped zoom-us instances..."
+cleanup_stopped_ringcentral_instances(){
+  echo "Cleaning up stopped ringcentral instances..."
   for c in $(${SUDO} docker ps -a -q)
   do
     image="$(${SUDO} docker inspect -f {{.Config.Image}} ${c})"
-    if [ "${image}" == "mdouchement/zoom-us:latest" ]; then
+    if [ "${image}" == "drrighteous/ringcenteral-custom:latest" ]; then
       running=$(${SUDO} docker inspect -f {{.State.Running}} ${c})
       if [ "${running}" != "true" ]; then
         ${SUDO} docker rm "${c}" >/dev/null
@@ -73,7 +72,7 @@ prepare_docker_device_parameters() {
 prog=$(basename $0)
 exec=$(which $prog)
 
-if [[ ${prog} == "zoom-us-wrapper" ]]; then
+if [[ ${prog} == "ringcentral-wrapper" ]]; then
   case ${1} in
     zoom)
       prog=${1}
@@ -89,7 +88,7 @@ elif [[ -n ${exec} ]]; then
   exec ${exec} $@
 fi
 
-cleanup_stopped_zoom_us_instances
+cleanup_stopped_ringcentral_instances
 prepare_docker_env_parameters
 prepare_docker_volume_parameters
 prepare_docker_device_parameters
@@ -101,4 +100,4 @@ ${SUDO} docker run -d \
   --device /dev/dri \
   ${VOLUMES} \
   ${ZOOM_EXTRA_DOCKER_ARGUMENTS} \
-  mdouchement/zoom-us:latest ${prog} $@ >/dev/null
+  drrighteous/ringcentral-custom:latest ${prog} $@ >/dev/null
