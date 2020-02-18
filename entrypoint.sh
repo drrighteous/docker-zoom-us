@@ -16,7 +16,7 @@ install_ringcentral() {
 uninstall_ringcentral_us() {
   echo "Uninstalling ringcentral-wrapper..."
   rm -rf /target/ringcentral-wrapper
-  echo "Uninstalling zoom-us..."
+  echo "Uninstalling ringcentral..."
   rm -rf /target/ringcentral
 }
 
@@ -73,21 +73,3 @@ case "$1" in
     exec $@
     ;;
 esac
-elif [[ -n ${exec} ]]; then
-  # launch host binary if it exists
-  exec ${exec} $@
-fi
-
-cleanup_stopped_ringcentral_instances
-prepare_docker_env_parameters
-prepare_docker_volume_parameters
-prepare_docker_device_parameters
-
-echo "Starting ${prog}..."
-${SUDO} docker run -d \
-  ${ENV_VARS} \
-  ${VIDEO_DEVICES} \
-  --device /dev/dri \
-  ${VOLUMES} \
-  ${RC_EXTRA_DOCKER_ARGUMENTS} \
-  drrighteous/ringcentral-custom:latest ${prog} $@ >/dev/null
