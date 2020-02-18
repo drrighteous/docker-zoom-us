@@ -4,35 +4,35 @@ set -e
 USER_UID=${USER_UID:-1000}
 USER_GID=${USER_GID:-1000}
 
-ZOOM_US_USER=zoom
+RC_US_USER=ringcentral
 
-install_zoom_us() {
-  echo "Installing zoom-us-wrapper..."
-  install -m 0755 /var/cache/zoom-us/zoom-us-wrapper /target/
-  echo "Installing zoom-us..."
-  ln -sf zoom-us-wrapper /target/zoom
+install_ringcentral() {
+  echo "Installing ringcentral-wrapper..."
+  install -m 0755 /var/cache/ringcentral/ringcentral-wrapper /target/
+  echo "Installing ringcentral..."
+  ln -sf ringcentral-wrapper /target/ringcentral
 }
 
-uninstall_zoom_us() {
-  echo "Uninstalling zoom-us-wrapper..."
-  rm -rf /target/zoom-us-wrapper
+uninstall_ringcentral_us() {
+  echo "Uninstalling ringcentral-wrapper..."
+  rm -rf /target/ringcentral-wrapper
   echo "Uninstalling zoom-us..."
-  rm -rf /target/zoom
+  rm -rf /target/ringcentral
 }
 
 create_user() {
   # create group with USER_GID
-  if ! getent group ${ZOOM_US_USER} >/dev/null; then
-    groupadd -f -g ${USER_GID} ${ZOOM_US_USER} >/dev/null 2>&1
+  if ! getent group ${RC_US_USER} >/dev/null; then
+    groupadd -f -g ${RC_GID} ${RC_US_USER} >/dev/null 2>&1
   fi
 
   # create user with USER_UID
-  if ! getent passwd ${ZOOM_US_USER} >/dev/null; then
+  if ! getent passwd ${RC_US_USER} >/dev/null; then
     adduser --disabled-login --uid ${USER_UID} --gid ${USER_GID} \
-      --gecos 'ZoomUs' ${ZOOM_US_USER} >/dev/null 2>&1
+      --gecos 'RingCentral' ${RC_US_USER} >/dev/null 2>&1
   fi
-  chown ${ZOOM_US_USER}:${ZOOM_US_USER} -R /home/${ZOOM_US_USER}
-  adduser ${ZOOM_US_USER} sudo
+  chown ${RC_US_USER}:${RC_US_USER} -R /home/${RC_US_USER}
+  adduser ${RC_US_USER} sudo
 }
 
 grant_access_to_video_devices() {
@@ -42,32 +42,32 @@ grant_access_to_video_devices() {
       VIDEO_GID=$(stat -c %g $device)
       VIDEO_GROUP=$(stat -c %G $device)
       if [[ ${VIDEO_GROUP} == "UNKNOWN" ]]; then
-        VIDEO_GROUP=zoomusvideo
+        VIDEO_GROUP=rcvideo
         groupadd -g ${VIDEO_GID} ${VIDEO_GROUP}
       fi
-      usermod -a -G ${VIDEO_GROUP} ${ZOOM_US_USER}
+      usermod -a -G ${VIDEO_GROUP} ${RC_US_USER}
       break
     fi
   done
 }
 
-launch_zoom_us() {
-  cd /home/${ZOOM_US_USER}
-  exec sudo -HEu ${ZOOM_US_USER} PULSE_SERVER=/run/pulse/native QT_GRAPHICSSYSTEM="native" $@
+launch_ringcentral() {
+  cd /home/${RC_US_USER}
+  exec sudo -HEu ${RC_US_USER} PULSE_SERVER=/run/pulse/native QT_GRAPHICSSYSTEM="native" $@
 }
 
 case "$1" in
   install)
-    install_zoom_us
+    install_ringcentral
     ;;
   uninstall)
-    uninstall_zoom_us
+    uninstall_ringcentral
     ;;
-  zoom)
+  ringcentral)
     create_user
     grant_access_to_video_devices
     echo "$1"
-    launch_zoom_us $@
+    launch_ringcentral $@
     ;;
   *)
     exec $@
