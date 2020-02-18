@@ -6,20 +6,6 @@ USER_GID=${USER_GID:-1000}
 
 RC_US_USER=ringcentral
 
-install_ringcentral() {
-  echo "Installing ringcentral-wrapper..."
-  install -m 0755 /var/cache/ringcentral/ringcentral-wrapper /target/
-  echo "Installing ringcentral..."
-  ln -sf ringcentral-wrapper /target/ringcentral
-}
-
-uninstall_ringcentral_us() {
-  echo "Uninstalling ringcentral-wrapper..."
-  rm -rf /target/ringcentral-wrapper
-  echo "Uninstalling ringcentral..."
-  rm -rf /target/ringcentral
-}
-
 create_user() {
   # create group with USER_GID
   if ! getent group ${RC_US_USER} >/dev/null; then
